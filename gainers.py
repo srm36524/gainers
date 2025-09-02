@@ -15,22 +15,14 @@ daily_change = daily_change.dropna()
 # Display title
 st.title(f"Daily Percentage Change for {ticker}")
 
-# Display daily change values with proper color
+# Display daily change values without color coding
 st.subheader("Daily Change:")
 
 # Loop through each date and the corresponding change value using iteritems()
 for date, change in daily_change.iteritems():
     if isinstance(change, (int, float)):  # Check if `change` is a scalar
-        # Check if the change is positive, negative or zero
-        if change > 0:
-            color = "green"
-        elif change < 0:
-            color = "red"
-        else:
-            color = "black"
-        
-        # Display the change with the correct color
-        st.markdown(f"<span style='color:{color};'>{date.date()}: {change:.2f}%</span>", unsafe_allow_html=True)
+        # Display the change without any color coding
+        st.write(f"{date.date()}: {change:.2f}%")
 
 # Calculate total change
 total_change = daily_change.sum()
