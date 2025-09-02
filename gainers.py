@@ -2,37 +2,42 @@ import yfinance as yf
 import pandas as pd
 import streamlit as st
 
-# Fetch closing prices for Kaushalya Infrastructure (BSE: KAUSHALYA.BO) over the last 30 days
-ticker = "KAUSHALYA.BO"
-stock_data = yf.download(ticker, period="30d", interval="1d")['Close']
+def get_stock_data(ticker, period):
+    try:
+        return yf.download(ticker, period=period)['Close']
+    except Exception as e:
+        st.error(f"Failed to retrieve stock data: {e}")
+        return pd.Series()
 
-if stock_data.empty:
-    st.write("No data available for the specified period.")
-else:
-    # Calculate daily percentage change as (Today Close / Previous Close) - 1
-    daily_change = (stock_data / stock_data.shift(1) - 1) * 100
+def calculate_daily_change(stock_data):
+    if stock_data.empty:
+        return pd.Series()
+    return stock_data.pct_change() * 100
 
-    # Drop the first NaN value (since the first row doesn't have a previous close to compare)
-    daily_change = daily_change.dropna()
-
-    # Check if daily_change is not empty
+def display_daily_changes(daily_change, num_days):
     if daily_change.empty:
-        st.write("Not enough data to calculate daily percentage change.")
+        st.write("No data available for the specified period.")
     else:
-        # Display the title
-        st.title(f"Daily Percentage Change for {ticker}")
-
-        # Display the daily percentage change for the last available trading days
-        st.subheader("Daily Change (Last 7 Trading Days):")
-
-        # Loop through the last 7 trading days of changes and display them
-        last_7_days = daily_change.tail(min(7, len(daily_change)))
-        for date, change in last_7_days.items():
-            if pd.isnull(change):
-                st.write(f"{date}: No data available")
-            else:
+        last_n_days = daily_change.tail(num_days)
+        st.subheader(f"Daily Change (Last {num_days} Trading Days):")
+        for date, change in last_n_days.items():
+            if pd.notnull(change):
                 st.write(f"{date}: {change:.2f}%")
+            else:
+                st.write(f"{date}: No data available")
 
-        # Calculate the total change for the last 7 trading days
-        total_change = last_7_days.sum()
-        st.write(f"Total Change in the last {len(last_7_days)} trading days: {total_change:.2f}%")
+        total_change = last_n_days.sum()
+        st.write(f"Total Change in the last {num_days} trading days: {total_change:.2f}%")
+
+def main():
+    ticker = "KAUSHALYA.BO"
+    period = "30d"
+    num_days = 7
+
+    st.title(f"Daily Percentage Change for {ticker}")
+    stock_data = get_stock_data(ticker, period)
+    daily_change = calculate_daily_change(stock_data).dropna()
+    display_daily_changes(daily_change, num_days)
+
+if __name__ == "__main__":
+    main()
