@@ -20,8 +20,8 @@ st.subheader("Daily Change:")
 
 # Loop through each date and the corresponding change value using iteritems()
 for date, change in daily_change.iteritems():
-    # Ensure `change` is a scalar value
-    if isinstance(change, (int, float)):  # Only proceed if the value is a number
+    if isinstance(change, (int, float)):  # Check if `change` is a scalar
+        # Check if the change is positive, negative or zero
         if change > 0:
             color = "green"
         elif change < 0:
