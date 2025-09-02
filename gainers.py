@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.graph_objects as go
 
 # Fetch the stock data for the last 7 days for 532925.BO
-ticker = "532925.BO"
+ticker = "KAUSHALYA.BO"
 stock_data = yf.download(ticker, period="7d", interval="1d")
 
 # Calculate daily change
