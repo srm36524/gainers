@@ -20,19 +20,15 @@ st.subheader("Daily Change:")
 
 # Loop through each date and the corresponding change value using iteritems()
 for date, change in daily_change.iteritems():
-    if pd.isna(change):  # Skip NaN values just in case
-        continue
-
-    # Ensure that `change` is a scalar value, not a Series
-    if isinstance(change, (int, float)):  # We should check if change is a number
-        # Check if change is positive, negative or zero
+    # Ensure `change` is a scalar value
+    if isinstance(change, (int, float)):  # Only proceed if the value is a number
         if change > 0:
             color = "green"
         elif change < 0:
             color = "red"
         else:
             color = "black"
-
+        
         # Display the change with the correct color
         st.markdown(f"<span style='color:{color};'>{date.date()}: {change:.2f}%</span>", unsafe_allow_html=True)
 
