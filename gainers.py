@@ -2,7 +2,7 @@ import yfinance as yf
 import pandas as pd
 import streamlit as st
 
-# Fetch closing prices for Kaushalya Infrastructure (BSE: KAUSHALYA.BO) over the last 7 days
+# Fetch closing prices for Kaushalya Infrastructure (BSE: KAUSHALYA.BO) over the last 8 days
 ticker = "KAUSHALYA.BO"
 stock_data = yf.download(ticker, period="8d", interval="1d")['Close']  # Fetching 8 days to cover the past 7 days
 
@@ -18,8 +18,8 @@ st.title(f"Daily Percentage Change for {ticker}")
 # Display the daily percentage change for today and the past 7 days
 st.subheader("Daily Change (Today and Past 7 Days):")
 
-# Loop through the last 7 days of changes and display them
-for date, change in daily_change.tail(7).iteritems():
+# Loop through the last 7 days of changes and display them using `.items()` for a Series
+for date, change in daily_change.tail(7).items():
     st.write(f"{date.date()}: {change:.2f}%")
 
 # Calculate the total change for the last 7 days
