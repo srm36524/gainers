@@ -18,21 +18,23 @@ st.title(f"Daily Percentage Change for {ticker}")
 # Display daily change values with proper color
 st.subheader("Daily Change:")
 
-# Loop through each date and the corresponding change value
-for date, change in daily_change.iteritems():  # use iteritems() for Series
+# Loop through each date and the corresponding change value using iteritems()
+for date, change in daily_change.iteritems():
     if pd.isna(change):  # Skip NaN values just in case
         continue
-    
-    # Check if change is positive, negative or zero
-    if change > 0:
-        color = "green"
-    elif change < 0:
-        color = "red"
-    else:
-        color = "black"
-    
-    # Display the change with the correct color
-    st.markdown(f"<span style='color:{color};'>{date.date()}: {change:.2f}%</span>", unsafe_allow_html=True)
+
+    # Ensure that `change` is a scalar value, not a Series
+    if isinstance(change, (int, float)):  # We should check if change is a number
+        # Check if change is positive, negative or zero
+        if change > 0:
+            color = "green"
+        elif change < 0:
+            color = "red"
+        else:
+            color = "black"
+
+        # Display the change with the correct color
+        st.markdown(f"<span style='color:{color};'>{date.date()}: {change:.2f}%</span>", unsafe_allow_html=True)
 
 # Calculate total change
 total_change = daily_change.sum()
