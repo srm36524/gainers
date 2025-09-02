@@ -4,7 +4,7 @@ import streamlit as st
 
 # Fetch closing prices for Kaushalya Infrastructure (BSE: KAUSHALYA.BO) over the last 8 days
 ticker = "KAUSHALYA.BO"
-stock_data = yf.download(ticker, period="8d", interval="1d")['Close']  # Fetching 8 days to cover the past 7 days
+stock_data = yf.download(ticker, period="8d", interval="1d")['Close']
 
 # Calculate daily percentage change as (Today Close / Previous Close) - 1
 daily_change = (stock_data / stock_data.shift(1) - 1) * 100
