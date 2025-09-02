@@ -20,7 +20,7 @@ st.subheader("Daily Change (Today and Past 7 Days):")
 
 # Loop through the last 7 days of changes and display them using `.items()` for a Series
 for date, change in daily_change.tail(7).items():
-    st.write(f"{date.date()}: {change:.2f}%")
+    st.write(f"{date}: {change:.2f}%")
 
 # Calculate the total change for the last 7 days
 total_change = daily_change.tail(7).sum()
