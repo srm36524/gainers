@@ -15,20 +15,24 @@ else:
     # Drop the first NaN value (since the first row doesn't have a previous close to compare)
     daily_change = daily_change.dropna()
 
-    # Display the title
-    st.title(f"Daily Percentage Change for {ticker}")
+    # Check if daily_change is not empty
+    if daily_change.empty:
+        st.write("Not enough data to calculate daily percentage change.")
+    else:
+        # Display the title
+        st.title(f"Daily Percentage Change for {ticker}")
 
-    # Display the daily percentage change for the last available trading days
-    st.subheader("Daily Change (Last 7 Trading Days):")
+        # Display the daily percentage change for the last available trading days
+        st.subheader("Daily Change (Last 7 Trading Days):")
 
-    # Loop through the last 7 trading days of changes and display them
-    last_7_days = daily_change.tail(7)
-    for date, change in last_7_days.items():
-        if pd.isnull(change):
-            st.write(f"{date}: No data available")
-        else:
-            st.write(f"{date}: {change:.2f}%")
+        # Loop through the last 7 trading days of changes and display them
+        last_7_days = daily_change.tail(min(7, len(daily_change)))
+        for date, change in last_7_days.items():
+            if pd.isnull(change):
+                st.write(f"{date}: No data available")
+            else:
+                st.write(f"{date}: {change:.2f}%")
 
-    # Calculate the total change for the last 7 trading days
-    total_change = last_7_days.sum()
-    st.write(f"Total Change in the last 7 trading days: {total_change:.2f}%")
+        # Calculate the total change for the last 7 trading days
+        total_change = last_7_days.sum()
+        st.write(f"Total Change in the last {len(last_7_days)} trading days: {total_change:.2f}%")
