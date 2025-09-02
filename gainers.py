@@ -17,7 +17,13 @@ st.title(f"Daily Percentage Change for {ticker}")
 
 # Display daily change values with proper color
 st.subheader("Daily Change:")
-for date, change in stock_data.items():
+
+# Loop through each date and the corresponding change value
+for date, change in stock_data.iteritems():  # use iteritems() for Series
+    if pd.isna(change):  # Skip NaN values just in case
+        continue
+    
+    # Check if change is positive, negative or zero
     if change > 0:
         color = "green"
     elif change < 0:
