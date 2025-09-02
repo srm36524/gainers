@@ -6,11 +6,11 @@ import streamlit as st
 ticker = "KAUSHALYA.BO"
 stock_data = yf.download(ticker, period="7d", interval="1d")['Close']
 
-# Calculate daily percentage change
-stock_data = stock_data.pct_change() * 100  # Daily change in percentage
+# Calculate daily percentage change as (Today Close / Previous Close) - 1
+daily_change = (stock_data / stock_data.shift(1) - 1) * 100
 
-# Drop the first NaN value (because the first value won't have a previous day to compare)
-stock_data = stock_data.dropna()
+# Drop the first NaN value (since the first row doesn't have a previous close to compare)
+daily_change = daily_change.dropna()
 
 # Display title
 st.title(f"Daily Percentage Change for {ticker}")
@@ -19,7 +19,7 @@ st.title(f"Daily Percentage Change for {ticker}")
 st.subheader("Daily Change:")
 
 # Loop through each date and the corresponding change value
-for date, change in stock_data.iteritems():  # use iteritems() for Series
+for date, change in daily_change.iteritems():  # use iteritems() for Series
     if pd.isna(change):  # Skip NaN values just in case
         continue
     
@@ -35,5 +35,5 @@ for date, change in stock_data.iteritems():  # use iteritems() for Series
     st.markdown(f"<span style='color:{color};'>{date.date()}: {change:.2f}%</span>", unsafe_allow_html=True)
 
 # Calculate total change
-total_change = stock_data.sum()
+total_change = daily_change.sum()
 st.write(f"Total Change in the last 7 days: {total_change:.2f}%")
